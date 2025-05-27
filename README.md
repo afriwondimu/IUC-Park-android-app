@@ -58,8 +58,8 @@ assets/                       # Static assets
 ├── splash/                   # Splash screen image
 │   ├── light.png
 ├── icon/                     # App icons
-│   ├── appicon.png
-│   ├── icon.png
+    ├── appicon.png
+    ├── icon.png
 ```
 
 ---
