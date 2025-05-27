@@ -11,7 +11,7 @@ Welcome to **IUC Park**, a Flutter-based Android application for efficient motor
 - **Check-Out System** ✅: Two-step verification for accurate check-outs.
 - **Export Records** 📄: Generate text file reports by date or plate number, saved to device storage.
 - **Offline Storage** 💾: SQLite database (`iucpark.db`) ensures data persistence offline.
-- **Simple Authentication** 🔐: Admin login with username `admin` and password `123`.
+- **Simple Authentication** 🔐: Admin login with username `iuc` and password `123`.
 - **Modern UI** 🎨: Red gradient accents, card-based layouts, and responsive navigation.
 - **Data Migration** 🔄: Migrates legacy `vehicles.dat` to SQLite via `migrate.dart`.
 
