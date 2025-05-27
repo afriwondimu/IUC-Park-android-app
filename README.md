@@ -23,7 +23,7 @@ Explore the app’s intuitive interface:
 
 | **Login Screen** | **Home Screen** | **Export Screen** |
 |------------------|-----------------|-------------------|
-| ![Login Screen](https://raw.githubusercontent.com/afriwondimu/IUC-Park-android-app/refs/heads/main/assets/screenshots/Loginsample.jpg) | ![Home Screen](screenshots/home.png) | ![Export Screen](screenshots/export.png) |
+| ![Login Screen](https://raw.githubusercontent.com/afriwondimu/IUC-Park-android-app/refs/heads/main/assets/screenshots/Loginsample.jpg) | ![Home Screen]([screenshots/home.png](https://raw.githubusercontent.com/afriwondimu/IUC-Park-android-app/refs/heads/main/assets/screenshots/homesample.jpg)) | ![Export Screen]([screenshots/export.png](https://raw.githubusercontent.com/afriwondimu/IUC-Park-android-app/refs/heads/main/assets/screenshots/exportssample.jpg)) |
 | Secure admin login | Check-in/check-out hub | Export parking records |
 
 ---
