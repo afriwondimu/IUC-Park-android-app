@@ -60,10 +60,6 @@ assets/                       # Static assets
 ├── icon/                     # App icons
 │   ├── appicon.png
 │   ├── icon.png
-screenshots/                  # Screenshots for README
-├── login.png
-├── home.png
-├── export.png
 ```
 
 ---
