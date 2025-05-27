@@ -1,5 +1,5 @@
 class AuthService {
   bool authenticate(String username, String password) {
-    return username == 'admin' && password == '123';
+    return username == 'iuc' && password == '123';
   }
 }
