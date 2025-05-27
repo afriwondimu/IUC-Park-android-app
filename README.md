@@ -105,7 +105,7 @@ assets/                       # Static assets
    ```
 
 7. **Login** 🔑
-   - Username: `admin`
+   - Username: `iuc`
    - Password: `123`
 
 ---
