@@ -8,20 +8,20 @@ class Motorbike extends Vehicle {
 
   factory Motorbike.fromJson(Map<String, dynamic> json) {
     return Motorbike(
-      json['couponCode'],
-      json['plateNumber'],
-      DateTime.parse(json['checkInTime']),
-    )..checkOutTime = json['checkOutTime'] != null
-        ? DateTime.parse(json['checkOutTime'])
+      json['coupon_code'] as int,
+      json['plate_number'] as String,
+      DateTime.parse(json['check_in_time'] as String),
+    )..checkOutTime = json['checkout_time'] != null
+        ? DateTime.parse(json['checkout_time'] as String)
         : null;
   }
 
   @override
   Map<String, dynamic> toJson() => {
-        'couponCode': couponCode,
-        'plateNumber': plateNumber,
-        'checkInTime': checkInTime.toIso8601String(),
-        'checkOutTime': checkOutTime?.toIso8601String(),
+        'coupon_code': couponCode,
+        'plate_number': plateNumber,
+        'check_in_time': checkInTime.toIso8601String(),
+        'checkout_time': checkOutTime?.toIso8601String(),
       };
 
   @override
@@ -31,6 +31,6 @@ class Motorbike extends Vehicle {
         ? formatter.format(checkOutTime!)
         : 'አልወጣም';
     return 'ኩፖን ቁጥር : $couponCode, ታርጋ ቁጥር : $plateNumber, '
-        '\nበ : ${formatter.format(checkInTime)} ገብቶ,\nበ: $checkOut ወጣ' ;
+        '\nበ : ${formatter.format(checkInTime)} ገብቶ,\nበ: $checkOut ወጣ';
   }
 }

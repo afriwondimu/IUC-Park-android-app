@@ -3,6 +3,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import '../screens/export_screen.dart';
 import '../screens/home_screen.dart';
 import '../screens/login_screen.dart';
+import '../services/auth_service.dart';
 
 enum ActiveScreen { home, export }
 
@@ -25,11 +26,12 @@ class BottomBar extends StatelessWidget {
             child: const Text('Cancel', style: TextStyle(color: Colors.red)),
           ),
           TextButton(
-            onPressed: () {
+            onPressed: () async {
+              await AuthService().logout(); // Clear login state
               Navigator.pop(context);
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (_) => LoginScreen()),
+                MaterialPageRoute(builder: (_) => const LoginScreen()),
               );
             },
             child: const Text('Yes', style: TextStyle(color: Colors.red)),
@@ -83,12 +85,12 @@ class BottomBar extends StatelessWidget {
               if (index == 0 && activeScreen != ActiveScreen.home) {
                 Navigator.pushReplacement(
                   parentContext,
-                  MaterialPageRoute(builder: (_) => HomeScreen()),
+                  MaterialPageRoute(builder: (_) => const HomeScreen()),
                 );
               } else if (index == 1 && activeScreen != ActiveScreen.export) {
                 Navigator.pushReplacement(
                   parentContext,
-                  MaterialPageRoute(builder: (_) => ExportScreen()),
+                  MaterialPageRoute(builder: (_) => const ExportScreen()),
                 );
               } else if (index == 2) {
                 _logout();

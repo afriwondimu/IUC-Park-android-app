@@ -1,6 +1,6 @@
 import 'dart:io';
-
 import 'package:sqflite/sqflite.dart';
+// ignore: depend_on_referenced_packages
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import '../models/motorbike.dart';
@@ -13,7 +13,7 @@ class DatabaseService {
 
   Database? _database;
 
-  Future<Database> get database async {
+  Future<Database> getDatabase() async {
     if (_database != null) return _database!;
     _database = await _initDatabase();
     return _database!;
@@ -35,9 +35,9 @@ class DatabaseService {
             CREATE TABLE vehicles (
               id INTEGER PRIMARY KEY AUTOINCREMENT,
               coupon_code INTEGER NOT NULL,
-              plate_number INTEGER NOT NULL,
+              plate_number TEXT NOT NULL,
               check_in_time TEXT NOT NULL,
-              check_out_time TEXT
+              checkout_time TEXT
             )
           ''');
         },
@@ -50,20 +50,36 @@ class DatabaseService {
     }
   }
 
+  Future<bool> isCouponActive(int couponCode) async {
+    try {
+      final db = await getDatabase();
+      final rows = await db.query(
+        'vehicles',
+        where: 'coupon_code = ? AND checkout_time IS NULL',
+        whereArgs: [couponCode],
+      );
+      print('Coupon $couponCode active: ${rows.isNotEmpty}');
+      return rows.isNotEmpty;
+    } catch (e) {
+      print('Error checking coupon: $e');
+      return false;
+    }
+  }
+
   Future<void> insertVehicle(Motorbike vehicle) async {
     try {
-      final db = await database;
+      final db = await getDatabase();
       await db.insert(
         'vehicles',
         {
           'coupon_code': vehicle.couponCode,
           'plate_number': vehicle.plateNumber,
           'check_in_time': vehicle.checkInTime.toIso8601String(),
-          'check_out_time': vehicle.checkOutTime?.toIso8601String(),
+          'checkout_time': vehicle.checkOutTime?.toIso8601String(),
         },
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
-      print('Inserted vehicle: ${vehicle.couponCode}');
+      print('Vehicle inserted: ${vehicle.couponCode}');
     } catch (e) {
       print('Error inserting vehicle: $e');
       rethrow;
@@ -72,14 +88,14 @@ class DatabaseService {
 
   Future<void> updateCheckOut(int couponCode, DateTime checkOutTime) async {
     try {
-      final db = await database;
+      final db = await getDatabase();
       await db.update(
         'vehicles',
-        {'check_out_time': checkOutTime.toIso8601String()},
-        where: 'coupon_code = ? AND check_out_time IS NULL',
+        {'checkout_time': checkOutTime.toIso8601String()},
+        where: 'coupon_code = ? AND checkout_time IS NULL',
         whereArgs: [couponCode],
       );
-      print('Updated checkout for coupon: $couponCode');
+      print('Updated checkout for: $couponCode');
     } catch (e) {
       print('Error updating checkout: $e');
       rethrow;
@@ -88,16 +104,16 @@ class DatabaseService {
 
   Future<List<Vehicle>> loadVehicles() async {
     try {
-      final db = await database;
+      final db = await getDatabase();
       final List<Map<String, dynamic>> maps = await db.query('vehicles');
       print('Loaded ${maps.length} vehicles');
       return maps.map((map) {
         return Motorbike(
-          map['coupon_code'],
-          map['plate_number'],
-          DateTime.parse(map['check_in_time']),
-        )..checkOutTime = map['check_out_time'] != null
-            ? DateTime.parse(map['check_out_time'])
+          map['coupon_code'] as int,
+          map['plate_number'] as String,
+          DateTime.parse(map['check_in_time'] as String),
+        )..checkOutTime = map['checkout_time'] != null
+            ? DateTime.parse(map['checkout_time'] as String)
             : null;
       }).toList();
     } catch (e) {
@@ -108,12 +124,12 @@ class DatabaseService {
 
   Future<List<Map<String, dynamic>>> getRecords({
     required DateTime date,
-    int? plateNumber,
+    String? plateNumber,
   }) async {
     try {
-      final db = await database;
+      final db = await getDatabase();
       final startOfDay = DateTime(date.year, date.month, date.day);
-      final endOfDay = startOfDay.add(Duration(days: 1));
+      final endOfDay = startOfDay.add(const Duration(days: 1));
       if (plateNumber != null) {
         final records = await db.query(
           'vehicles',
@@ -145,7 +161,7 @@ class DatabaseService {
 
   Future<void> close() async {
     try {
-      final db = await database;
+      final db = await getDatabase();
       await db.close();
       _database = null;
       print('Database closed');

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../app_state.dart'; // Updated import path
+import '../app_state.dart';
 
 class CheckIn extends StatefulWidget {
   const CheckIn({super.key});
@@ -23,10 +23,10 @@ class _CheckInState extends State<CheckIn> {
 
     try {
       final couponCode = int.parse(_checkInCouponController.text);
-      final plateNumber = int.parse(_checkInPlateController.text);
+      final plateNumber = _checkInPlateController.text;
       final appState = Provider.of<AppState>(context, listen: false);
       final result = await appState.checkInService.checkIn(couponCode, plateNumber);
-      await appState.saveData(); // Calls the restored saveData method
+      await appState.saveData();
       setState(() {
         _checkInResult = result;
         _checkInCouponController.clear();

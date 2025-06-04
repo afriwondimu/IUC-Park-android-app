@@ -26,8 +26,7 @@ class _ExportFormState extends State<ExportForm> {
     final year = _yearController.text.trim();
     final month = _monthController.text.trim();
     final day = _dayController.text.trim();
-    final plateInput = _plateController.text.trim();
-    int? plateNumber = plateInput.isEmpty ? null : int.tryParse(plateInput);
+    final plateNumber = _plateController.text.trim().isEmpty ? null : _plateController.text.trim();
 
     if (year.length != 4 || int.tryParse(year) == null || int.parse(year) < 2000) {
       setState(() {
@@ -55,7 +54,7 @@ class _ExportFormState extends State<ExportForm> {
     
     if (!RegExp(r'^\d{8}$').hasMatch(date)) {
       setState(() {
-        _result = 'የተሳሳተ ቀን አቆጣጠር አስገብተዋል እባክዎት አስተካክለው ያስገቡ';
+        _result = 'የተሳሳተ ቀን አቆጣጠር አስገብተዋል እባክዎት አስቴካክለው ያስገቡ';
         _isLoading = false;
       });
       return;

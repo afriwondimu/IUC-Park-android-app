@@ -88,9 +88,9 @@ class HomeScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         SizedBox(height: cardPadding),
-                        CheckIn(),
+                        const CheckIn(),
                         SizedBox(height: cardPadding),
-                        CheckOut(),
+                        const CheckOut(),
                         SizedBox(height: cardPadding * 2),
                       ],
                     ),

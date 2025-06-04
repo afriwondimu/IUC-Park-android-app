@@ -9,7 +9,6 @@ import 'services/database_service.dart';
 import 'main.dart';
 import 'models/motorbike.dart';
 
-
 Future<void> migrateData() async {
   final directory = await getExternalStorageDirectory();
   final dbPath = join(directory!.path, 'databases');
@@ -41,7 +40,7 @@ void main() async {
   runApp(
     ChangeNotifierProvider(
       create: (_) => AppState(),
-      child: MyApp(),
+      child: const MyApp(isLoggedIn: false), 
     ),
   );
 }

@@ -1,6 +1,6 @@
 abstract class Vehicle {
   int couponCode;
-  int plateNumber;
+  String plateNumber;
   DateTime checkInTime;
 
   Vehicle(this.couponCode, this.plateNumber, this.checkInTime);

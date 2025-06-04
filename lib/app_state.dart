@@ -15,7 +15,7 @@ class AppState extends ChangeNotifier {
   late ExportService exportService;
 
   AppState() {
-    checkInService = CheckInService(databaseService, couponAvailability);
+    checkInService = CheckInService(databaseService);
     checkOutService = CheckOutService(databaseService, couponAvailability);
     exportService = ExportService(databaseService);
     _loadData();

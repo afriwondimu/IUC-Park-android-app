@@ -1,20 +1,26 @@
 import 'package:flutter/material.dart';
-
 import 'package:provider/provider.dart';
 import 'app_state.dart';
 import 'screens/login_screen.dart';
+import 'screens/home_screen.dart';
+import 'services/auth_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final authService = AuthService();
+  final isLoggedIn = await authService.isLoggedIn();
   runApp(
     ChangeNotifierProvider(
       create: (_) => AppState(),
-      child: MyApp(),
+      child: MyApp(isLoggedIn: isLoggedIn),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool isLoggedIn;
+
+  const MyApp({super.key, required this.isLoggedIn});
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +28,7 @@ class MyApp extends StatelessWidget {
       title: 'Smart Motor Coupon',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: LoginScreen(),
+      home: isLoggedIn ? const HomeScreen() : const LoginScreen(),
     );
   }
 }
-
-
-

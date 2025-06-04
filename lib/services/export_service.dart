@@ -9,7 +9,7 @@ class ExportService {
 
   ExportService(this._databaseService);
 
-  Future<String> exportRecords(String date, int? plateNumber) async {
+  Future<String> exportRecords(String date, String? plateNumber) async {
     try {
       if (date.length != 8 || !RegExp(r'^\d{8}$').hasMatch(date)) {
         return 'Invalid date format. Expected yyyyMMdd (e.g., 20250519)';
@@ -94,8 +94,8 @@ class ExportService {
         bool hasRecords = false;
 
         for (var record in records) {
-          final checkOut = record['check_out_time'] != null
-              ? formatter.format(DateTime.parse(record['check_out_time']))
+          final checkOut = record['checkout_time'] != null
+              ? formatter.format(DateTime.parse(record['checkout_time']))
               : 'Not checked out';
 
           sink.write('| ${record['plate_number'].toString().padRight(12)}'
