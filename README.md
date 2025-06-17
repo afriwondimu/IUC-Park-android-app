@@ -24,7 +24,7 @@ Explore the app’s intuitive interface:
 
 | **Login Screen** | **Home Screen** | **Export Screen** | **Admin Screen** | **Admin Edit User** |
 |------------------|-----------------|-------------------|------------------|---------------------|
-| ![Login Screen](https://raw.githubusercontent.com/afriwondimu/IUC-Park-android-app/refs/heads/main/assets/screenshots/Loginsample.jpg) | ![Home Screen](https://raw.githubusercontent.com/afriwondimu/IUC-Park-android-app/refs/heads/main/assets/screenshots/homesample.jpg) | ![Export Screen](https://raw.githubusercontent.com/afriwondimu/IUC-Park-android-app/refs/heads/main/assets/screenshots/exportssample.jpg) | ![Admin Screen](https://raw.githubusercontent.com/afriwondimu/IUC-Park-android-app/refs/heads/main/assets/screenshots/adminsample.jpg) | ![Admin Edit User](https://raw.githubusercontent.com/afriwondimu/IUC-Park-android-app/refs/heads/main/assets/screenshots/admin_edit_user_sample.jpg) |
+| ![Login Screen](https://raw.githubusercontent.com/afriwondimu/IUC-Park-android-app/refs/heads/main/assets/screenshots/loginscreen.jpg) | ![Home Screen](https://raw.githubusercontent.com/afriwondimu/IUC-Park-android-app/refs/heads/main/assets/screenshots/userhomescreen.jpg) | ![Export Screen](https://raw.githubusercontent.com/afriwondimu/IUC-Park-android-app/refs/heads/main/assets/screenshots/userexportscreen.jpg) | ![Admin Screen](https://raw.githubusercontent.com/afriwondimu/IUC-Park-android-app/refs/heads/main/assets/screenshots/adminhomesccreen.jpg) | ![Admin Export Data](https://raw.githubusercontent.com/afriwondimu/IUC-Park-android-app/refs/heads/main/assets/screenshots/adminexportscreen.jpg) |
 | Phone number login | Check-in/check-out hub | Export parking records | Manage users | Edit user details |
 
 ---
