@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../app_state.dart';
-import '../widgets/check_in.dart';
-import '../widgets/check_out.dart';
-import '../widgets/bottom_bar.dart';
+import '../../app_state.dart';
+import '../../widgets/export_db.dart';
+import '../../widgets/export_form.dart';
+import '../../widgets/admin_bar.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class AdminExportScreen extends StatefulWidget {
+  const AdminExportScreen({super.key});
 
   @override
+  _AdminExportScreenState createState() => _AdminExportScreenState();
+}
+
+class _AdminExportScreenState extends State<AdminExportScreen> {
+  @override
   Widget build(BuildContext context) {
+    final username = Provider.of<AppState>(context).getCurrentUsername();
     final screenHeight = MediaQuery.of(context).size.height;
     final cardPadding = screenHeight * 0.02;
-    final username = Provider.of<AppState>(context).getCurrentUsername();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -75,7 +80,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                       const SizedBox(width: 12),
                       Text(
-                        'IUC Park - $username',
+                        'IUC Park - ${username ?? "Guest"}',
                         style: const TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -91,9 +96,9 @@ class HomeScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         SizedBox(height: cardPadding),
-                        const CheckIn(),
+                        const ExportDB(),
                         SizedBox(height: cardPadding),
-                        const CheckOut(),
+                        const ExportForm(),
                         SizedBox(height: cardPadding * 2),
                       ],
                     ),
@@ -104,9 +109,9 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      bottomNavigationBar: BottomBar(
+      bottomNavigationBar: AdminBar(
         parentContext: context,
-        activeScreen: ActiveScreen.home,
+        activeScreen: ActiveScreen.export,
       ),
     );
   }

@@ -39,6 +39,7 @@ dependencies:
   flutter_native_splash: ^2.4.4
   sqflite: ^2.3.3+1
   shared_preferences: ^2.3.2 # for persistent login state
+  calendar_date_picker2: ^1.0.9
 
 
   # The following adds the Cupertino Icons font to your application.

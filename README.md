@@ -1,7 +1,6 @@
 # IUC Park 🏍️📱
 
-Welcome to **IUC Park**, a Flutter-based Android application for efficient motorbike parking management! 🌟 This app enables parking attendants to check in and check out motorbikes using coupon codes, export parking records, and store data offline in a SQLite database. With a modern UI and robust offline capabilities, it’s designed for seamless use in parking facilities.
-
+Welcome to **IUC Park**, a Flutter-based Android application for efficient motorbike parking management! 🌟 This app enables parking attendants to check in and check out motorbikes using coupon codes, manage user accounts, export parking records and databases, and store data offline in a SQLite database. With a modern UI and robust offline capabilities, it’s designed for seamless use in parking facilities.
 
 ---
 
@@ -9,9 +8,11 @@ Welcome to **IUC Park**, a Flutter-based Android application for efficient motor
 
 - **Check-In System** 🏍️: Assign coupon codes (1–300) and plate numbers to motorbikes.
 - **Check-Out System** ✅: Two-step verification for accurate check-outs.
+- **User Management** 👤: Admin can add, edit, or delete users with usernames, phone numbers, and passwords.
 - **Export Records** 📄: Generate text file reports by date or plate number, saved to device storage.
+- **Database Export** 💾: Export the SQLite database (`iucpark.db`) for a selected date (admin only).
 - **Offline Storage** 💾: SQLite database (`iucpark.db`) ensures data persistence offline.
-- **Simple Authentication** 🔐: Admin login with username `iuc` and password `123`.
+- **Phone-Based Authentication** 🔐: Login with phone number and password; admin uses predefined credentials (phone: `0912345678`, password: `123`).
 - **Modern UI** 🎨: Red gradient accents, card-based layouts, and responsive navigation.
 - **Data Migration** 🔄: Migrates legacy `vehicles.dat` to SQLite via `migrate.dart`.
 
@@ -21,10 +22,10 @@ Welcome to **IUC Park**, a Flutter-based Android application for efficient motor
 
 Explore the app’s intuitive interface:
 
-| **Login Screen** | **Home Screen** | **Export Screen** |
-|------------------|-----------------|-------------------|
-| ![Login Screen](https://raw.githubusercontent.com/afriwondimu/IUC-Park-android-app/refs/heads/main/assets/screenshots/Loginsample.jpg) | ![Home Screen](https://raw.githubusercontent.com/afriwondimu/IUC-Park-android-app/refs/heads/main/assets/screenshots/homesample.jpg) | ![Export Screen](https://raw.githubusercontent.com/afriwondimu/IUC-Park-android-app/refs/heads/main/assets/screenshots/exportssample.jpg) |
-| Secure admin login | Check-in/check-out hub | Export parking records |
+| **Login Screen** | **Home Screen** | **Export Screen** | **Admin Screen** | **Admin Edit User** |
+|------------------|-----------------|-------------------|------------------|---------------------|
+| ![Login Screen](https://raw.githubusercontent.com/afriwondimu/IUC-Park-android-app/refs/heads/main/assets/screenshots/Loginsample.jpg) | ![Home Screen](https://raw.githubusercontent.com/afriwondimu/IUC-Park-android-app/refs/heads/main/assets/screenshots/homesample.jpg) | ![Export Screen](https://raw.githubusercontent.com/afriwondimu/IUC-Park-android-app/refs/heads/main/assets/screenshots/exportssample.jpg) | ![Admin Screen](https://raw.githubusercontent.com/afriwondimu/IUC-Park-android-app/refs/heads/main/assets/screenshots/adminsample.jpg) | ![Admin Edit User](https://raw.githubusercontent.com/afriwondimu/IUC-Park-android-app/refs/heads/main/assets/screenshots/admin_edit_user_sample.jpg) |
+| Phone number login | Check-in/check-out hub | Export parking records | Manage users | Edit user details |
 
 ---
 
@@ -33,21 +34,26 @@ Explore the app’s intuitive interface:
 ```
 lib/
 ├── widgets/                  # Reusable UI components
+│   ├── admin_bar.dart        # Bottom navigation bar for admin (Admin, Home, Export, Logout)
 │   ├── bottom_bar.dart       # Bottom navigation bar (Home, Export, Logout)
 │   ├── check_in.dart         # Check-in form
 │   ├── check_out.dart        # Check-out form with confirmation
+│   ├── export_db.dart        # Database export form (date selection)
 │   ├── export_form.dart      # Export records form
 ├── models/                   # Data models
 │   ├── motorbike.dart        # Motorbike class extending Vehicle
 │   ├── vehicle.dart          # Abstract Vehicle class
 ├── services/                 # Business logic and data services
-│   ├── auth_service.dart     # Authentication logic
+│   ├── auth_service.dart     # Phone number-based authentication
 │   ├── check_in_service.dart # Check-in operations
 │   ├── check_out_service.dart# Check-out operations
 │   ├── database_service.dart # SQLite database management
 │   ├── export_service.dart   # Export records to text files
 │   ├── file_service.dart     # File handling utilities
 ├── screens/                  # Full-screen UI pages
+│   ├── admin/                # Admin-related screens
+│   │   ├── admin_export_screen.dart # Admin database export screen
+│   │   ├── admin_screen.dart # User management screen
 │   ├── export_screen.dart    # Export records screen
 │   ├── home_screen.dart      # Main screen with check-in/check-out
 │   ├── login_screen.dart     # Login screen
@@ -58,8 +64,14 @@ assets/                       # Static assets
 ├── splash/                   # Splash screen image
 │   ├── light.png
 ├── icon/                     # App icons
-    ├── appicon.png
-    ├── icon.png
+│   ├── appicon.png
+│   ├── icon.png
+├── screenshots/              # Screenshots for README
+│   ├── Loginsample.jpg
+│   ├── homesample.jpg
+│   ├── exportssample.jpg
+│   ├── adminsample.jpg
+│   ├── admin_edit_user_sample.jpg
 ```
 
 ---
@@ -105,19 +117,22 @@ assets/                       # Static assets
    ```
 
 7. **Login** 🔑
-   - Username: `iuc`
+   - Admin Phone Number: `0912345678`
    - Password: `123`
+   - Regular users: Use phone number and password set by admin.
 
 ---
 
 ## 📱 Usage
 
-1. **Login**: Sign in with admin credentials.
+1. **Login**: Sign in with phone number and password.
 2. **Home Screen**: Manage motorbike parking via Check-In and Check-Out cards.
    - **Check-In**: Input coupon code (1–300) and plate number.
    - **Check-Out**: Enter coupon code, confirm plate number, and finalize.
-3. **Export Records**: Use the Export screen (via bottom navigation) to create reports by date or plate number.
-4. **Logout**: Sign out from the bottom navigation bar.
+3. **Admin Screen**: (Admin only) Add, edit, or delete users with usernames, phone numbers, and passwords.
+4. **Export Records**: Use the Export screen to create text file reports by date or plate number.
+5. **Database Export**: (Admin only) Use the Admin Export screen to export the SQLite database for a selected date.
+6. **Logout**: Sign out from the bottom navigation bar.
 
 ---
 
@@ -141,32 +156,40 @@ Run `flutter pub outdated` to check for updates.
 ### Assets
 - **Splash Screen**: `assets/splash/light.png` (configured in `flutter_native_splash.yaml`).
 - **App Icons**: `assets/icon/appicon.png` and `assets/icon/icon.png`.
+- **Screenshots**: `assets/screenshots/*.jpg` for README.
 - **pubspec.yaml**:
   ```yaml
   assets:
     - assets/icon/icon.png
     - assets/icon/appicon.png
     - assets/splash/light.png
+    - assets/screenshots/Loginsample.jpg
+    - assets/screenshots/homesample.jpg
+    - assets/screenshots/exportssample.jpg
+    - assets/screenshots/adminsample.jpg
+    - assets/screenshots/admin_edit_user_sample.jpg
   ```
 
 ### Permissions
-- **Android**: Storage permissions (`READ_EXTERNAL_STORAGE`, `WRITE_EXTERNAL_STORAGE`, `MANAGE_EXTERNAL_STORAGE`) in `android/app/src/main/AndroidManifest.xml` for exporting reports.
+- **Android**: Storage permissions (`READ_EXTERNAL_STORAGE`, `WRITE_EXTERNAL_STORAGE`, `MANAGE_EXTERNAL_STORAGE`) in `android/app/src/main/AndroidManifest.xml` for exporting reports and databases.
 
 ---
 
 ## 🗄️ Data Storage
 
-- **SQLite** (`iucpark.db`): Stores parking records in the app’s documents directory, persisting offline until uninstalled.
+- **SQLite** (`iucpark.db`): Stores parking records and user data (username, phone number, password) in the app’s documents directory, persisting offline until uninstalled.
 - **Migration**: `migrate.dart` converts `vehicles.dat` to SQLite and deletes the `.dat` file.
-- **Exports**: Reports are saved as text files in `/storage/emulated/0/IUC/` or the app’s external storage.
+- **Exports**: 
+  - Text reports saved in `/storage/emulated/0/IUC Park/`.
+  - Database exports saved in `/storage/emulated/0/IUC Park/DB/` with filenames like `iucpark_YYYY-MM-DD.db`.
 
 ---
 
 ## 🎨 UI Design
 
 - **Red Gradient Accents**: Circular gradients on screens.
-- **Card Layouts**: Check-In, Check-Out, and Export forms in elevated cards.
-- **Navigation**: Bottom bar with Home, Export, and Logout tabs.
+- **Card Layouts**: Check-In, Check-Out, Export, Admin, and Database Export forms in elevated cards.
+- **Navigation**: Bottom bar with Admin (admin only), Home, Export, and Logout tabs.
 - **Splash Screen**: Custom image (`assets/splash/light.png`).
 
 ---

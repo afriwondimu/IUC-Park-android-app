@@ -3,18 +3,17 @@ import 'package:provider/provider.dart';
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import '../app_state.dart';
 
-class ExportForm extends StatefulWidget {
-  const ExportForm({super.key});
+class ExportDB extends StatefulWidget {
+  const ExportDB({super.key});
 
   @override
-  _ExportFormState createState() => _ExportFormState();
+  _ExportDBState createState() => _ExportDBState();
 }
 
-class _ExportFormState extends State<ExportForm> {
-  final _plateController = TextEditingController();
-  String? _result;
-  bool _isLoading = false;
+class _ExportDBState extends State<ExportDB> {
   List<DateTime?> _selectedDates = [];
+  bool _isLoading = false;
+  String? _result;
 
   Future<void> _showCalendar() async {
     final results = await showCalendarDatePicker2Dialog(
@@ -35,7 +34,7 @@ class _ExportFormState extends State<ExportForm> {
     }
   }
 
-  void _export() async {
+  Future<void> _exportDatabase() async {
     setState(() {
       _isLoading = true;
       _result = null;
@@ -53,16 +52,21 @@ class _ExportFormState extends State<ExportForm> {
     final year = date.year.toString();
     final month = date.month.toString().padLeft(2, '0');
     final day = date.day.toString().padLeft(2, '0');
-    final plateNumber = _plateController.text.trim().isEmpty ? null : _plateController.text.trim();
-
     final formattedDate = '$year$month$day';
 
     try {
       final appState = Provider.of<AppState>(context, listen: false);
-      final result = await appState.exportService.exportRecords(formattedDate, plateNumber);
+      final records = await appState.databaseService.getRecords(date: date);
+      if (records.isEmpty) {
+        setState(() {
+          _result = 'No data found by selected date';
+          _isLoading = false;
+        });
+        return;
+      }
+      final result = await appState.exportService.exportDatabase(formattedDate);
       setState(() {
         _result = result;
-        _plateController.clear();
       });
     } catch (e) {
       setState(() {
@@ -73,12 +77,6 @@ class _ExportFormState extends State<ExportForm> {
         _isLoading = false;
       });
     }
-  }
-
-  @override
-  void dispose() {
-    _plateController.dispose();
-    super.dispose();
   }
 
   @override
@@ -97,7 +95,7 @@ class _ExportFormState extends State<ExportForm> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'EXPORT DATA',
+              'EXPORT DATABASE',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -147,52 +145,14 @@ class _ExportFormState extends State<ExportForm> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
-            Container(
-              padding: const EdgeInsets.only(left: 8, bottom: 4),
-              child: const Text(
-                'ታርጋ ቁጥር',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black87,
-                ),
-              ),
-            ),
-            TextField(
-              controller: _plateController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(color: Colors.grey.shade400),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(color: Colors.grey.shade400),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: Colors.red),
-                ),
-                contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                hintText: 'Optional',
-                hintStyle: TextStyle(color: Colors.grey.shade600),
-              ),
-              keyboardType: TextInputType.phone,
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
             const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,
               height: 50,
               child: ElevatedButton(
-                onPressed: _isLoading ? null : _export,
+                onPressed: _isLoading ? null : _exportDatabase,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
+                  backgroundColor: Colors.blue,
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25),
@@ -209,7 +169,7 @@ class _ExportFormState extends State<ExportForm> {
                         ),
                       )
                     : const Text(
-                        'EXPORT',
+                        'EXPORT DB',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

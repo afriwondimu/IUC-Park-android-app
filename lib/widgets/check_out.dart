@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../app_state.dart'; // Updated import path
+import '../app_state.dart';
 
 class CheckOut extends StatefulWidget {
   const CheckOut({super.key});
@@ -21,32 +21,28 @@ class _CheckOutState extends State<CheckOut> {
       _checkOutResult = null;
     });
 
-    try {
-      final couponCode = int.parse(_checkOutCouponController.text);
-      final appState = Provider.of<AppState>(context, listen: false);
-      final result = await appState.checkOutService.checkOut(couponCode, _checkOutConfirmMode);
-      if (result.startsWith('Plate:') && !_checkOutConfirmMode) {
-        setState(() {
-          _checkOutResult = result;
-          _checkOutConfirmMode = true;
-        });
-      } else {
-        await appState.saveData(); // Calls the restored saveData method
-        setState(() {
-          _checkOutResult = result;
-          _checkOutConfirmMode = false;
-          _checkOutCouponController.clear();
-        });
-      }
-    } catch (e) {
+    final couponCode = int.tryParse(_checkOutCouponController.text.trim());
+    if (couponCode == null) {
       setState(() {
-        _checkOutResult = 'የተሳሳተ አሞላል';
-      });
-    } finally {
-      setState(() {
+        _checkOutResult = 'የተሳሳተ ኩፖን ቁጥር';
         _isLoading = false;
       });
+      return;
     }
+
+    final appState = Provider.of<AppState>(context, listen: false);
+    final result = await appState.checkOutService.checkOut(couponCode, _checkOutConfirmMode);
+    setState(() {
+      _checkOutResult = result;
+      if (result.startsWith('ታርጋ ቁጥር:') && !_checkOutConfirmMode) {
+        _checkOutConfirmMode = true;
+      } else {
+        _checkOutConfirmMode = false;
+        _checkOutCouponController.clear();
+        appState.saveData();
+      }
+      _isLoading = false;
+    });
   }
 
   @override

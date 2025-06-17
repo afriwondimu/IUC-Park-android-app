@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../app_state.dart';
+import '../screens/admin/admin_screen.dart';
+import '../screens/home_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
-import '../services/auth_service.dart';
-import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _usernameController = TextEditingController();
+  final _phoneNumberController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _authService = AuthService();
   String? _error;
   bool _isLoading = false;
 
   Future<void> _requestPermissions() async {
     await Permission.storage.request();
-    if (await Permission.manageExternalStorage.isDenied) {
-      await Permission.manageExternalStorage.request();
+    if (await Permission.storage.isDenied) {
+      await Permission.storage.request();
     }
   }
 
@@ -31,22 +31,31 @@ class _LoginScreenState extends State<LoginScreen> {
       _error = null;
     });
 
-    final username = _usernameController.text;
+    final appState = Provider.of<AppState>(context, listen: false);
+    final phoneNumber = _phoneNumberController.text.trim();
     final password = _passwordController.text;
 
-    await Future.delayed(const Duration(milliseconds: 800));
-
-    if (_authService.authenticate(username, password)) {
-      await _authService.setLoggedIn(true); // Save login state
+    try {
       await _requestPermissions();
-      Navigator.pushReplacement(
-        // ignore: use_build_context_synchronously
-        context,
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
-      );
-    } else {
+      await appState.login(phoneNumber, password);
+      if (appState.getCurrentUsername() != null) {
+        if (!mounted) return;
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (_) => appState.authService.isAdmin() ? const AdminScreen() : const HomeScreen(),
+          ),
+          (Route<dynamic> route) => false,
+        );
+      } else {
+        setState(() {
+          _error = 'Invalid phone number or password';
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
       setState(() {
-        _error = 'Invalid username or password';
+        _error = 'Invalid phone number or password';
         _isLoading = false;
       });
     }
@@ -127,11 +136,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 40),
                   TextField(
-                    controller: _usernameController,
+                    controller: _phoneNumberController,
                     style: const TextStyle(color: Colors.black87),
+                    keyboardType: TextInputType.phone,
                     decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.person_outline, color: Colors.grey.shade600),
-                      labelText: 'Username',
+                      prefixIcon: Icon(Icons.phone, color: Colors.grey.shade600),
+                      labelText: 'Phone Number',
                       labelStyle: TextStyle(color: Colors.grey.shade600),
                       enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.grey.shade400),
@@ -227,7 +237,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
-    _usernameController.dispose();
+    _phoneNumberController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
